@@ -72,7 +72,7 @@ await this.firstname.fill(firstname);
 await this.lastname.fill(lastname);
 await this.country_code.click();
 await this.India.click();
-await this.mobile.fill(mobile_number);
+await this.mobile.fill(String(mobile_number));
 await this.Password.fill(Password);
 await this.Click_checkbox.click()
 await this.submit.click();

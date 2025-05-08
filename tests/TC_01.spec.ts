@@ -3,21 +3,23 @@ import { LoginPage } from '../Pages/LoginPage';
 import dotenv from 'dotenv';
 import path from 'path';
 import { ExtraCurriculumPage } from '../Pages/ExtraCurriculumPage';
+import { UtilityPage } from '../Pages/UtilityPage';
 
 dotenv.config({ path: path.resolve(__dirname, '..', '.env') });
 
+const utility = new UtilityPage();
+
 let Base_URL: string = String(process.env.Base_URL);
-let Email_id: string = String(process.env.Email_id);
-let firstname: string = String(process.env.firstname);
-let lastname: string = String(process.env.lastname);
-let mobile: string = String(process.env.mobile);
-let password: string = String(process.env.password);
+let firstname = utility.Generate_firstname();
+let lastname = utility.Generate_lastname();
+let mobile = utility.Generate_mobile();
+let password = utility.Generate_password();
 let street: string = String(process.env.street);
 let city: string = String(process.env.city);
 let zip: string = String(process.env.zip);
+let Email_id = utility.Generate_username();
 
 test('Register New user', async ({ page }) => {
-
   // Navigate to the base URL
   await page.goto(Base_URL);
 
@@ -31,6 +33,7 @@ test('Register New user', async ({ page }) => {
   await page.waitForTimeout(2000);
   await login.Lets_get_to_know(street, city, zip);
 
+
   // Verify ExtraCurriculum field is present and has the expected error message
   await login.Click_On_Nxt_btn();
   const extraCurriculumPage = new ExtraCurriculumPage(page);
@@ -40,16 +43,12 @@ test('Register New user', async ({ page }) => {
   const activities = JSON.parse(process.env.ACTIVITIES ?? '[]');
 
   for (const activity of activities) {
-    // Add a delay for each activity (optional)
-    await page.waitForTimeout(2000);
-
-    // Use the instance of ExtraCurriculumPage to call Add_Activities
-    await extraCurriculumPage.Add_Activities(
+   
+      await extraCurriculumPage.Add_Activities(
       activity.activityName,
       activity.numOfYears.toString(),
       activity.leaderRole ? 'Yes' : 'No', // Assuming leaderRole is a boolean
       activity.description
     );
   }
-
-  });
+});
